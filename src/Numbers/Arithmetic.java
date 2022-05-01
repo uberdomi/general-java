@@ -216,12 +216,13 @@ public class Arithmetic {
         return mul(x.inv());
     }
     public Arithmetic div(long x){
-        Arithmetic tmp = new Arithmetic();
+        return div(new Rational(x));
+        /*Arithmetic tmp = new Arithmetic();
         tmp = tmp.add(c.div(x));
         for(Root r : d){
             tmp = tmp.add(r.div(x));
         }
-        return tmp;
+        return tmp;*/
     }
     public Arithmetic div(Arithmetic x){
         return mul(x.inv());
@@ -300,6 +301,19 @@ public class Arithmetic {
         return left.sub(right).div(sqrt5);
     }
 
+    public static double e(int k){
+        Arithmetic e = new Arithmetic("1");
+        Arithmetic a = new Arithmetic("1");
+        for(int i = 1; i<=k; i++){
+            //a = a.mul(i);
+            //e = e.add(a.inv());
+            a = a.div(i);
+            e = e.add(a);
+            //System.out.print("| " + a + " # " + e + " |");
+        }
+        return e.toDouble();
+    }
+
     public double toDouble(){
         double x = 0;
         x += c.toDouble();
@@ -335,15 +349,20 @@ public class Arithmetic {
         System.out.println("------------");
         Arithmetic fi = new Arithmetic("1/2+1/2{5}");
         Arithmetic bif = new Arithmetic("1/2-1/2{5}");
-        System.out.println(fi);
-        System.out.println(bif);
-        System.out.println(fi.inv());
-        System.out.println(fi.add(bif));
-        System.out.println(fi.mul(fi));
-        System.out.println(fi.mul(bif));
-        System.out.println(fi.mul(fi).sub(fi));
+        System.out.println(fi + " fi");
+        System.out.println(bif + " bif");
+        System.out.println(fi.inv() + " 1/fi");
+        System.out.println(fi.add(bif) + " fi + bif");
+        System.out.println(fi.mul(fi) + " fi ^2");
+        System.out.println(fi.mul(bif) + " fi * bif");
+        System.out.println(fi.mul(fi).sub(fi) + " fi * fi - fi");
+        System.out.println("Fibo nums:");
         for(int i=0; i<21; i++){
             System.out.println(fibo(i) + " " + i);
+        }
+        System.out.println("------------");
+        for(int i=1; i<21; i++){
+            System.out.println(e(i) + " " + i + " series components");
         }
     }
 
