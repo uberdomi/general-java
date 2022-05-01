@@ -329,9 +329,9 @@ public class Arithmetic {
         System.out.println("------------");
         Arithmetic f = a.mul(c);
         System.out.println(f + "a * inv");
-        System.out.println(bb*cc + "conj * inv");
-        System.out.println(bb*aa + "conj * a");
-        System.out.println(aa*cc + "a * inv");
+        System.out.println(bb*cc + " conj * inv");
+        System.out.println(bb*aa + " conj * a");
+        System.out.println(aa*cc + " a * inv");
         System.out.println("------------");
         Arithmetic fi = new Arithmetic("1/2+1/2{5}");
         Arithmetic bif = new Arithmetic("1/2-1/2{5}");
