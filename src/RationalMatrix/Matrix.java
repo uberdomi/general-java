@@ -2,6 +2,7 @@ package RationalMatrix;
 
 public class Matrix {
     private Rational[][] matrix;
+    public static int entrances = 0;
 
     public Matrix(int x, int y){
         this.matrix = new Rational[x][y];
@@ -27,6 +28,20 @@ public class Matrix {
             }
         }
 
+        this.matrix = matrix;
+    }
+
+    public Matrix(int n, String s) throws IllegalArgumentException{
+        String nums[] = s.split(";");
+        if(nums.length!=n*n){
+            throw new IllegalArgumentException("not quadratic");
+        }
+        Rational[][] matrix = new Rational[n][n];
+        for(int i=0; i<n; i++){
+            for (int j=0; j<n; j++){
+                matrix[i][j] = new Rational(nums[n*i+j]);
+            }
+        }
         this.matrix = matrix;
     }
 
@@ -191,6 +206,7 @@ public class Matrix {
     }
 
     public Rational det(){
+        entrances++;
         if(getX()!=getY()){
             return new Rational(0);
         }
@@ -219,6 +235,22 @@ public class Matrix {
             }
         }
         return result;
+    }
+
+    public Rational detThr(){
+        if(getX()!=getY()){
+            return new Rational(0);
+        }
+        Rational result[]= new Rational[1];
+        detThread d = new detThread(this,result, 0);
+        d.start();
+        try {
+            d.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return result[0];
     }
 
 
@@ -304,6 +336,65 @@ public class Matrix {
         return s.toString();
     }
 
+    private class detThread extends Thread{
+        private Matrix A;
+        private Rational[] sums;
+        private final int k;
+        private detThread(Matrix A, Rational[] sums, int k){
+            entrances++;
+            this.A = A;
+            this.sums = sums;
+            this.k = k;
+        }
+        @Override
+        public void run(){
+            int h = A.getX();
+            if(h==1){
+                sums[k] = A.getXY(0,0);
+            }
+            else{
+                Rational sum = new Rational(0);
+                Rational[][] lines = new Rational[h][h-1];
+                for(int i=0; i<h; i++){
+                    lines[i] = subArray(A.getLine(i),1,h-1);
+                }
+                Matrix[] Bs = new Matrix[h];
+                Rational[] newSums = new Rational[h];
+                detThread[] threads = new detThread[h];
+                for(int i=0; i<h; i++){
+                    int l=0;
+                    Bs[i] = new Matrix(h-1,h-1);
+                    for(int j=0; j<h; j++){
+                        if(j!=i){
+                            Bs[i].setLine(l++,lines[j]);
+                        }
+                    }
+                    threads[i] = new detThread(Bs[i],newSums,i);
+                    threads[i].start();
+                }
+
+                for(int i=0; i<h; i++){
+                    try {
+                        threads[i].join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                for(int i=0; i<h; i++){
+                    if(i%2==0){
+                        sum = sum.add(A.getXY(i,0).mul(newSums[i]));
+                    }
+                    else{
+                        sum = sum.sub(A.getXY(i,0).mul(newSums[i]));
+                    }
+                }
+
+                sums[k] = sum;
+            }
+        }
+    }
+
     private class invThread extends Thread{
         private final int x;
         private final int y;
@@ -342,6 +433,7 @@ public class Matrix {
     }
 
     public static void main(String[] args) {
+        /*
         Matrix D = big(10);
 
         System.out.println(D);
@@ -360,5 +452,41 @@ public class Matrix {
         long duration2 = (endTime - startTime);
         System.out.println("time: "+ duration2);
         System.out.println("ratio: " + (double) duration1/duration2);
+
+         */
+
+        Matrix A = new Matrix(3,"1;2;3;4;5;6;7;8;8");
+        System.out.println(A);
+        System.out.println(A.det());
+        System.out.println(A.detThr());
+        System.out.println(entrances);
+        entrances=0;
+        Matrix D = big(7);
+
+        System.out.println(D);
+        long startTime = System.nanoTime();
+        System.out.println(D.det());
+        System.out.println(entrances);
+        long endTime = System.nanoTime();
+        long duration1 = (endTime - startTime);
+        System.out.println("time: "+ duration1);
+        entrances=0;
+        startTime = System.nanoTime();
+        System.out.println(D.detThr());
+        System.out.println(entrances);
+        endTime = System.nanoTime();
+        long duration2 = (endTime - startTime);
+        System.out.println("time: "+ duration2);
+        System.out.println("ratio: " + (double) duration1/duration2);
+        /*
+        D = big(10);
+        entrances=0;
+        System.out.println(D.det());
+        System.out.println(entrances);
+        entrances=0;
+        System.out.println(D.detThr());
+        System.out.println(entrances);
+
+         */
     }
 }
