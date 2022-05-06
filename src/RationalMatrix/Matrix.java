@@ -2,7 +2,6 @@ package RationalMatrix;
 
 public class Matrix {
     private Rational[][] matrix;
-    public static int entrances = 0;
 
     public Matrix(int x, int y){
         this.matrix = new Rational[x][y];
@@ -64,7 +63,7 @@ public class Matrix {
         Matrix A = new Matrix(h,h);
         for(int i=0; i<h; i++){
             for (int j=0; j<h; j++){
-                A.setXY(i,j,new Rational(((i * 5L) + (j * 7L)) / 11));
+                A.setXY(i,j,new Rational(((i * 5L) + (j * 7L)) / 13));
                 //i%(j+1)==0 ? new Rational(2) : new Rational(1)
             }
         }
@@ -206,7 +205,44 @@ public class Matrix {
     }
 
     public Rational det(){
-        entrances++;
+        if(getX()!=getY()){
+            return new Rational(0);
+        }
+        if(getX()==1){
+            return getXY(0,0);
+        }
+        Rational result= new Rational(1);
+        byte sgn = 1;
+        int h=getX();
+        Matrix A = copy();
+        for(int i=0; i<h; i++){
+            int l=i;
+            while (A.getXY(l,i).equals(0)){
+                l++;
+                sgn *= -1;
+                if(l==h){
+                    //System.out.println(A);
+                    return new Rational(0);
+                }
+            }
+
+            A.swapLines(l,i);
+
+            for(int j=i+1;j<h;j++){
+                Rational a = A.getXY(j,i).div(A.getXY(i,i));
+                for(int k=i; k<h; k++){
+                    A.setXY(j,k,A.getXY(j,k).sub(A.getXY(i,k).mul(a)));
+                }
+            }
+        }
+        for(int i=0; i<h; i++){
+            result = result.mul(A.getXY(i,i));
+        }
+        //System.out.println(A);
+        return result.mul(sgn);
+    }
+    public Rational detRec(){
+
         if(getX()!=getY()){
             return new Rational(0);
         }
@@ -341,7 +377,6 @@ public class Matrix {
         private Rational[] sums;
         private final int k;
         private detThread(Matrix A, Rational[] sums, int k){
-            entrances++;
             this.A = A;
             this.sums = sums;
             this.k = k;
@@ -457,36 +492,16 @@ public class Matrix {
 
         Matrix A = new Matrix(3,"1;2;3;4;5;6;7;8;8");
         System.out.println(A);
-        System.out.println(A.det());
+        System.out.println(A.detRec());
         System.out.println(A.detThr());
-        System.out.println(entrances);
-        entrances=0;
-        Matrix D = big(7);
-
+        System.out.println(A.det());
+        Matrix D = big(14);
+        //System.out.println(D.det());
         System.out.println(D);
-        long startTime = System.nanoTime();
         System.out.println(D.det());
-        System.out.println(entrances);
-        long endTime = System.nanoTime();
-        long duration1 = (endTime - startTime);
-        System.out.println("time: "+ duration1);
-        entrances=0;
-        startTime = System.nanoTime();
-        System.out.println(D.detThr());
-        System.out.println(entrances);
-        endTime = System.nanoTime();
-        long duration2 = (endTime - startTime);
-        System.out.println("time: "+ duration2);
-        System.out.println("ratio: " + (double) duration1/duration2);
-        /*
-        D = big(10);
-        entrances=0;
-        System.out.println(D.det());
-        System.out.println(entrances);
-        entrances=0;
-        System.out.println(D.detThr());
-        System.out.println(entrances);
+        Matrix DI = D.inv();
+        System.out.println(DI);
+        System.out.println(D.mul(DI));
 
-         */
     }
 }
