@@ -82,8 +82,9 @@ public class Main {
 
 
     public static void main(String[] args) {
-        for(int i=1; i<20; i++){
-            System.out.println(i + "! = " + fac(i));
-        }
+        System.out.println(2137%1);
+        System.out.println(0%1);
+        System.out.println(-3%6);
+        System.out.println(-3%6);
     }
 }
