@@ -84,27 +84,46 @@ public class Fibo {
 
     public static void main(String[] args) {
         Fibo fib = new Fibo(1,1,0,1);
-        int h=15;
+        int h=20;
+        long startTime = System.nanoTime();
         for(int i=0; i<h; i++){
             System.out.println(fib.fnRec(i));
         }
+        long endTime = System.nanoTime();
+        long duration1 = (endTime - startTime);
+        System.out.println("time: "+ duration1);
         System.out.println("-------");
 
+        startTime = System.nanoTime();
         for(int i=0; i<h; i++){
             System.out.println(fib.fn(i));
         }
+        endTime = System.nanoTime();
+        long duration2 = (endTime - startTime);
+        System.out.println("time: "+ duration2);
+        System.out.println("ratio (rec/expl): " + (double)duration1/duration2);
 
         System.out.println("-------");
 
         fib = new Fibo(1,2,0,1);
+
+        startTime = System.nanoTime();
         for(int i=0; i<h; i++){
             System.out.println(fib.fnRec(i));
         }
+        endTime = System.nanoTime();
+        duration1 = (endTime - startTime);
+        System.out.println("time: "+ duration1);
         System.out.println("-------");
 
+        startTime = System.nanoTime();
         for(int i=0; i<h; i++){
             System.out.println(fib.fn(i));
         }
+        endTime = System.nanoTime();
+        duration2 = (endTime - startTime);
+        System.out.println("time: "+ duration2);
+        System.out.println("ratio (rec/expl): " + (double)duration1/duration2);
 
     }
 }

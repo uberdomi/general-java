@@ -217,28 +217,30 @@ public class Matrix {
         Matrix A = copy();
         for(int i=0; i<h; i++){
             int l=i;
-            while (A.getXY(l,i).equals(0)){
+            while (A.getXY(l,i).equals(0)){ //looking for a non-zero value in every column
                 l++;
                 sgn *= -1;
-                if(l==h){
-                    //System.out.println(A);
+                if(l==h){ //all lines 0 -> det = 0
                     return new Rational(0);
                 }
             }
 
             A.swapLines(l,i);
+            //the i-th diagonal value is non-zero, otherwise the matrix is not invertible
 
             for(int j=i+1;j<h;j++){
+                //linearly subtracting from other lines, so that in all other columns the values are 0
                 Rational a = A.getXY(j,i).div(A.getXY(i,i));
                 for(int k=i; k<h; k++){
                     A.setXY(j,k,A.getXY(j,k).sub(A.getXY(i,k).mul(a)));
                 }
             }
         }
+        //after all is in an upper-triangular form
         for(int i=0; i<h; i++){
             result = result.mul(A.getXY(i,i));
         }
-        //System.out.println(A);
+        //det is then the product of diagonal values times the amount of line swaps (sgn)
         return result.mul(sgn);
     }
     public Rational detRec(){
