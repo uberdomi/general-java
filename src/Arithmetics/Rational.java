@@ -105,6 +105,9 @@ public class Rational {
     }
 
 
+    public Rational copy(){
+        return new Rational(a,b);
+    }
 
     // \in O(log(ab))
     private static long ggT(long a, long b){

@@ -33,6 +33,7 @@ public class RootList implements Iterable<Root>{
     }
 
     public void insert(Root r){
+        r = r.copy();
         if(root.compareRoot(r)==0){
             root.setP(root.getP().add(r.getP()));
         }
@@ -50,7 +51,7 @@ public class RootList implements Iterable<Root>{
 
     @Override
     public String toString(){
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         boolean first=true;
         for(Root r : this){
             if(first){
@@ -60,6 +61,9 @@ public class RootList implements Iterable<Root>{
                 s.append("+");
             }
             s.append(r);
+        }
+        if(first){
+            return "0";
         }
         return s.toString();
     }

@@ -41,6 +41,8 @@ public class Arithmetic {
         for (Root r : c.nums){
             sum.insert(r);
         }
+        //System.out.println(sum + " sum");
+        //System.out.println(nums + " nums");
         return new Arithmetic(sum);
     }
     public Arithmetic add(Rational p){
@@ -148,7 +150,7 @@ public class Arithmetic {
 
     public Arithmetic inv(){
         Arithmetic zae = conj();
-        Rational nenn = mul(zae).nums.head1();
+        Rational nenn = mul(zae).head();
         return zae.div(nenn);
     }
 
@@ -188,12 +190,25 @@ public class Arithmetic {
         return con;
     }
 
+    public Rational head(){
+        return nums.head1();
+    }
+
     private int pow2(int x){
         int y=1;
         for(int i=0; i<x; i++){
             y *=2;
         }
         return y;
+    }
+
+    public Arithmetic powN (int n){
+        Arithmetic prod = new Arithmetic(1);
+        for (int i=0; i<n; i++){
+            prod = prod.mul(this);
+            //System.out.println(prod);
+        }
+        return prod;
     }
 
     @Override
@@ -232,5 +247,27 @@ public class Arithmetic {
         System.out.println(xx.toDouble());
         System.out.println(x.mul(xx));
         System.out.println(x.toDouble()*xx.toDouble());
+
+        var fi = new Arithmetic(1);
+        fi = fi.add(new Root(5));
+        fi = fi.div(2);
+        System.out.println(fi);
+        var fib = new Arithmetic(1);
+        fib = fib.sub(new Root(5));
+        fib = fib.div(2);
+        System.out.println(fib);
+        for(int i=0; i<10; i++){
+            //System.out.println(fi.powN(i));
+            //System.out.println(fib.powN(i));
+            System.out.println(fi.powN(i).sub(fib.powN(i)));
+        }
+        var k = new Arithmetic(new Rational("21/37"));
+        var l = new Arithmetic(new Root("21/37"));
+        System.out.println(k);
+        System.out.println(l);
+        System.out.println(k.inv());
+        System.out.println(l.inv());
+        System.out.println(fi.powN(6));
+        System.out.println(fib.powN(6));
     }
 }

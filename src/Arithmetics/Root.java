@@ -56,13 +56,13 @@ public class Root {
         long b = q.getB();
         long mul=1;
         long div=1;
-        for(int i=2;i*i<=a;i++){
+        for(long i=2;i*i<=a;i++){
             while(a%(i*i)==0){
                 mul *= i;
                 a /= (i*i);
             }
         }
-        for(int i=2;i*i<=b;i++){
+        for(long i=2;i*i<=b;i++){
             while(b%(i*i)==0){
                 div *= i;
                 b /= (i*i);
@@ -104,9 +104,6 @@ public class Root {
         double p = this.p.toDouble();
         double q = this.q.toDouble();
         double x = 1000;
-        if(x<1){
-            x=1;
-        }
         double y=0;
         while(y*y-q>eps||q-y*y>eps){
             while(y*y<q){
@@ -139,6 +136,10 @@ public class Root {
     }
     public Root div(Rational x){
         return new Root(p.div(x),q);
+    }
+
+    public Root copy(){
+        return new Root(p.copy(),q.copy());
     }
 
     public static void main(String[] args) {
