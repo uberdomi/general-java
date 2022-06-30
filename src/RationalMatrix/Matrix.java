@@ -204,6 +204,30 @@ public class Matrix {
         return B;
     }
 
+    public Matrix pow(int n) throws IllegalArgumentException{
+        if(getX()!=getY()){
+            throw new IllegalArgumentException("not quadratic!");
+        }
+        Matrix B = unit(getX());
+        if(n>0){
+            for(int i=0; i<n; i++){
+                B = B.mul(this);
+            }
+        }
+        if(n<0){
+            n = -n;
+            Matrix inv = inv();
+            if(inv==null){
+                throw new IllegalArgumentException("not invertible!");
+            }
+            for(int i=0; i<n; i++){
+                B = B.mul(inv);
+            }
+        }
+
+        return B;
+    }
+
     public Rational det(){
         if(getX()!=getY()){
             return new Rational(0);
@@ -492,6 +516,7 @@ public class Matrix {
 
          */
 
+        /*
         Matrix A = new Matrix(3,"1;2;3;4;5;6;7;8;8");
         System.out.println(A);
         System.out.println(A.detRec());
@@ -504,6 +529,15 @@ public class Matrix {
         Matrix DI = D.inv();
         System.out.println(DI);
         System.out.println(D.mul(DI));
+
+         */
+        Matrix A = new Matrix(5,"0;-1;0;-3;-2;0;0;0;0;0;0;-1;0;1;-2;0;0;0;0;0;0;0;0;-1;0");
+        System.out.println(A);
+        System.out.println(A.pow(0));
+        System.out.println(A.pow(1));
+        System.out.println(A.pow(2));
+        System.out.println(A.pow(3));
+        System.out.println(A.pow(-1));
 
     }
 }

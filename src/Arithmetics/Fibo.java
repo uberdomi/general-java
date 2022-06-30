@@ -72,13 +72,8 @@ public class Fibo {
     }
     public Arithmetic fn (int n){
         Arithmetic l2l1 = lambda2.sub(lambda1);
-        //System.out.println(l2l1 + " l2l1");
         Arithmetic l1n = lambda1.powN(n);
-        //System.out.println(l1n + " l1n");
-        //System.out.println(lambda1 + " lambda1");
-        //System.out.println(lambda2 + " lambda2");
         Arithmetic l2n = lambda2.powN(n);
-        //System.out.println(l2n + " l2n");
         return new Arithmetic(f0).mul(l1n.mul(lambda2).sub(lambda1.mul(l2n))).add(new Arithmetic(f1).mul(l2n.sub(l1n))).div(l2l1);
     }
 
