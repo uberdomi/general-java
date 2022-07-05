@@ -64,8 +64,8 @@ public class Cosinus extends Function{
     @Override
     public String toString(){
         StringBuilder s= new StringBuilder();
-        if(!(prefactor-1<eps||1-prefactor<eps)){
-            if(prefactor+1<eps||-1-prefactor<eps){
+        if(prefactor-1>eps||1-prefactor>eps){ //not 1
+            if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
                 s.append("-");
             }
             else if(infinitesimal(prefactor)){

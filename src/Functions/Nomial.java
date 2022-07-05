@@ -66,8 +66,8 @@ public class Nomial extends Function implements Comparable{
     @Override
     public String toString(){
         StringBuilder s = new StringBuilder();
-        if(!(prefactor-1<eps||1-prefactor<eps)){
-            if(prefactor+1<eps||-1-prefactor<eps){
+        if(prefactor-1>eps||1-prefactor>eps){ //not 1
+            if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
                 s.append("-");
             }
             else if(infinitesimal(prefactor)){
@@ -78,13 +78,13 @@ public class Nomial extends Function implements Comparable{
             }
         }
 
-        if(g instanceof Identity){
-            s.append("x");
+        if(g instanceof SumF){
+            s.append("(");
+            s.append(g);
+            s.append(")");
         }
         else{
-            s.append("(");
-            s.append(g.toString());
-            s.append(")");
+            s.append(g);
         }
         s.append("^");
         s.append(pow);

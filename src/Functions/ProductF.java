@@ -34,8 +34,8 @@ public class ProductF extends Function{
     public String toString(){
         StringBuilder s= new StringBuilder();
 
-        if(!(prefactor-1<eps||1-prefactor<eps)){
-            if(prefactor+1<eps||-1-prefactor<eps){
+        if(prefactor-1>eps||1-prefactor>eps){ //not 1
+            if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
                 s.append("-");
             }
             else if(infinitesimal(prefactor)){
@@ -60,7 +60,7 @@ public class ProductF extends Function{
             s.append(")");
         }
         else{
-            s.append(f1);
+            s.append(f2);
         }
         return s.toString();
     }

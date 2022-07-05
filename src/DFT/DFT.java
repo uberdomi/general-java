@@ -11,21 +11,12 @@ public class DFT {
         this.f = f;
         F = new int[n][n];
         qs = new ComplexRoot[n];
-        double[][] ff = new double[n][n];
         for(int i=0; i<n; i++){
             for(int j=0; j<n; j++){
                 F[i][j] = (i*j)%n;
-                ff[i][j] = F[i][j];
             }
             qs[i] = new ComplexRoot(n,i);
         }
-        /*
-        for(int i=0; i<n; i++){
-            System.out.println(qs[i] + " " + i + "-th power");
-        }
-        System.out.println(tab(ff));
-
-         */
     }
 
     public double[][] transform(double a, double b){

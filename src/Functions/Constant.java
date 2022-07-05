@@ -3,7 +3,7 @@ package Functions;
 public class Constant extends Function{
     private final double c;
     public Constant(double c){
-        super();
+        super(c);
         this.c=c;
     }
 

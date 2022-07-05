@@ -9,12 +9,12 @@ public class SumF extends Function{
     private final List<Function> fs;
     public SumF (List<Function> fs){
         super();
-        fs = sort(fs);
+        //fs = sort(fs);
         this.fs = fs;
     }
     public SumF (double x,List<Function> fs){
         super(x);
-        fs = sort(fs);
+        //fs = sort(fs);
         this.fs = fs;
     }
 
@@ -55,8 +55,8 @@ public class SumF extends Function{
             return "" + 0;
         }
         StringBuilder s = new StringBuilder();
-        if(!(prefactor-1<eps||1-prefactor<eps)){
-            if(prefactor+1<eps||-1-prefactor<eps){
+        if(prefactor-1>eps||1-prefactor>eps){ //not 1
+            if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
                 s.append("-");
             }
             else if(infinitesimal(prefactor)){
@@ -75,9 +75,19 @@ public class SumF extends Function{
             s.append(f);
         }
 
-        if(!(prefactor-1<eps||1-prefactor<eps)){
+        if(prefactor-1>eps||1-prefactor>eps){
             s.append(")");
         }
         return s.toString();
+    }
+
+    public static void main(String[] args) {
+        List<Function> l = new LinkedList<>();
+        //l.add(new Constant(-6));
+        //l.add(new Nomial(-6,1));
+        //l.add(new Nomial(11,2));
+        //l.add(new Nomial(3));
+        SumF f = new SumF(l);
+        System.out.println(f);
     }
 }

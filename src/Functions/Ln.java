@@ -25,8 +25,8 @@ public class Ln extends Function{
         if(input<=0){
             throw new IllegalArgumentException("negative log!");
         }
-        double x = input > 1 ? input : 1/input; //x>=1
-        double output = 0; //exp(output) == 1 <= input
+        double x = g.value(input) > 1 ? g.value(input) : 1/g.value(input); //x>=1
+        double output = 0; //exp(output) == 1 <= g(input)
         double y = 10;
         Exp e = new Exp();
         while(e.value(output)-x>eps||x-e.value(output)>eps){
@@ -36,7 +36,7 @@ public class Ln extends Function{
             output-=y;
             y/=10;
         }
-        return input > 1 ? prefactor*output : -prefactor*output;
+        return g.value(input) > 1 ? prefactor*output : -prefactor*output;
     }
 
     @Override
@@ -53,8 +53,8 @@ public class Ln extends Function{
     @Override
     public String toString(){
         StringBuilder s= new StringBuilder();
-        if(!(prefactor-1<eps||1-prefactor<eps)){
-            if(prefactor+1<eps||-1-prefactor<eps){
+        if(prefactor-1>eps||1-prefactor>eps){ //not 1
+            if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
                 s.append("-");
             }
             else if(infinitesimal(prefactor)){
@@ -71,12 +71,19 @@ public class Ln extends Function{
     }
 
     public static void main(String[] args) {
+
         System.out.println(new Ln().value(2));
         System.out.println(new Exp().value(new Ln().value(2)));
         System.out.println(new Ln().value(new Exp().value(2)));
         System.out.println(new Ln().value(0.5));
         System.out.println(new Exp().value(new Ln().value(0.5)));
         System.out.println(new Ln().value(new Exp().value(0.5)));
-        System.out.println(new Ln(new Exp()).derivative());
+
+
+        //System.out.println(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp()))))))).value(1));
+        System.out.println(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp()))))))).derivative());
+        System.out.println(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp()))))))).derivative().value(3));
+        System.out.println(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp()))))))).derivative().derivative());
+        System.out.println(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp(new Ln(new Exp()))))))).derivative().derivative().value(4));
     }
 }
