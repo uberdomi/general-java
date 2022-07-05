@@ -1,21 +1,27 @@
 package DFT;
 
 public class SinusCosinus {
-    private static final int n=35;
-    public static double pi = pi();
+    private static final int n=30;
+    public static double pi = 3.141592653588003;
     public static double[] cosSin(double input) {
         double sin = 0;
         double cos = 1;
         double x = 1;
-        //int fac = 1;
 
-        for (int i = 1; i <= n; i++) {
+        if(input > pi){
+            int div = (int) (input/(2*pi));
+            input -= 2*pi*div;
+        }
+        else if(input < -pi){
+            int div = (int) (-input/(2*pi));
+            input += 2*pi*div;
+        }
+
+        for (int j = 1; j <= n; j++) {
             x *= input;
-            x /= i;
-            //fac *= i;
-            //x *= input;
+            x /= j;
 
-            switch (i % 4) {
+            switch (j % 4) {
                 case 0 -> {
                     cos += x;
                 }
@@ -29,7 +35,6 @@ public class SinusCosinus {
                     sin -= x;
                 }
             }
-            //System.out.println(i + ": cos " + cos + " sin " + sin);
         }
         return new double[]{cos, sin};
     }
@@ -37,7 +42,7 @@ public class SinusCosinus {
     public static double pi(){
         double pi = 1;
         double dx = 1;
-        double eps = 0.0000001;
+        double eps = 1e-12;
         double cos = cosSin(pi)[0];
         while(cos>eps||cos<-eps){ //first root of cosine
             while(cosSin(pi)[0]>0){
@@ -59,5 +64,10 @@ public class SinusCosinus {
         d = cosSin(4.569513309090912);
         System.out.println("cosinus " + d[0] + ", sinus " + d[1]);
         System.out.println(d[0]*d[0]+d[1]*d[1]);
+        System.out.println("---------");
+        d = cosSin(0.78539);
+        System.out.println("cosinus " + d[0] + ", sinus " + d[1]);
+        d = cosSin(0.78539+200*pi);
+        System.out.println("cosinus " + d[0] + ", sinus " + d[1]);
     }
 }
