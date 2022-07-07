@@ -11,21 +11,13 @@ public class Ln extends Function{
         super();
         this.g=g;
     }
-    public Ln(double x){
-        super(x);
-        g=new Identity();
-    }
-    public Ln(double x,Function g){
-        super(x);
-        this.g=g;
-    }
 
     @Override
     public double value(double input) {
-        if(input<=0){
+        double x = g.value(input) > 1 ? g.value(input) : 1/g.value(input); //x>=1
+        if(x<=0){
             throw new IllegalArgumentException("negative log!");
         }
-        double x = g.value(input) > 1 ? g.value(input) : 1/g.value(input); //x>=1
         double output = 0; //exp(output) == 1 <= g(input)
         double y = 10;
         Exp e = new Exp();
@@ -36,38 +28,34 @@ public class Ln extends Function{
             output-=y;
             y/=10;
         }
-        return g.value(input) > 1 ? prefactor*output : -prefactor*output;
+        return g.value(input) > 1 ? output : -output;
     }
 
     @Override
     public Function derivative() {
-        if(prefactor==0){
-            return new Constant(0);
-        }
         if(g instanceof Identity){
-            return new Nomial(prefactor,-1);
+            return new Nomial(-1);
         }
-        return new ProductF(prefactor,g.derivative(),new Nomial(-1,g));
+        return (new ProductF(new Nomial(-1,g),g.derivative()).simplify());
     }
 
     @Override
     public String toString(){
         StringBuilder s= new StringBuilder();
-        if(prefactor-1>eps||1-prefactor>eps){ //not 1
-            if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
-                s.append("-");
-            }
-            else if(infinitesimal(prefactor)){
-                s.append((int) prefactor);
-            }
-            else{
-                s.append(prefactor);
-            }
-        }
+
         s.append("ln(");
         s.append(g);
         s.append(")");
         return s.toString();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        return false;
+    }
+
+    public boolean equals(Ln f){
+        return g.equals(f.g);
     }
 
     public static void main(String[] args) {

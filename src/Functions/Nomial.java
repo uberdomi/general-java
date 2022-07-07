@@ -1,18 +1,8 @@
 package Functions;
 
-public class Nomial extends Function implements Comparable{
+public class Nomial extends Function{
     private final int pow;
     private final Function g;
-    public Nomial(double x, int n,Function g){
-        super(x);
-        pow=n;
-        this.g = g;
-    }
-    public Nomial(double x, int n){
-        super(x);
-        pow=n;
-        g = new Identity();
-    }
     public Nomial(int n){
         super();
         pow=n;
@@ -34,14 +24,11 @@ public class Nomial extends Function implements Comparable{
 
     @Override
     public double value(double input) {
-        return prefactor*pow(g.value(input),pow);
+        return pow(g.value(input),pow);
     }
 
     @Override
     public Function derivative() {
-        if(prefactor==0){
-            return new Constant(0);
-        }
         if(g instanceof Constant){
             return new Constant(0);
         }
@@ -50,14 +37,14 @@ public class Nomial extends Function implements Comparable{
                 return new Constant(0);
             }
             case 1 -> {
-                return new Constant(prefactor);
+                return g.derivative();
             }
             default -> {
                 if(g instanceof Identity){
-                    return new Nomial(prefactor*(pow-1),pow-1);
+                    return (new ProductF(new Constant(pow),new Nomial(pow-1)).simplify());
                 }
                 else{
-                    return new ProductF(prefactor,g.derivative(),new Nomial(pow-1,pow-1,g));
+                    return (new ProductF((new ProductF(new Constant(pow),new Nomial(pow-1,g)).simplify()),g.derivative()).simplify());
                 }
             }
         }
@@ -66,6 +53,7 @@ public class Nomial extends Function implements Comparable{
     @Override
     public String toString(){
         StringBuilder s = new StringBuilder();
+        /*
         if(prefactor-1>eps||1-prefactor>eps){ //not 1
             if(prefactor+1<eps&&-1-prefactor<eps){ //eq -1
                 s.append("-");
@@ -77,6 +65,8 @@ public class Nomial extends Function implements Comparable{
                 s.append(prefactor);
             }
         }
+
+         */
 
         if(g instanceof SumF){
             s.append("(");
@@ -91,29 +81,16 @@ public class Nomial extends Function implements Comparable{
         return s.toString();
     }
 
-
-
     @Override
-    public int compareTo(Object o) {
-        throw new IllegalArgumentException("illegal comparison");
+    public boolean equals(Object o){
+        return false;
     }
-    public int compareTo(Nomial other){
-        if(pow>other.getPow()){
-            return 1;
-        }
-        if(pow<other.getPow()){
-            return -1;
-        }
-        if(prefactor-other.getPrefactor()<eps&&other.getPrefactor()-prefactor<eps){
-            return 0;
-        }
-        if(prefactor>other.getPrefactor()){
-            return 1;
-        }
-        return -1;
+
+    public boolean equals(Nomial f){
+        return pow==f.getPow()&&g.equals(f.g);
     }
 
     public static void main(String[] args) {
-        System.out.println(new Nomial(21,37));
+        System.out.println(new Nomial(21));
     }
 }

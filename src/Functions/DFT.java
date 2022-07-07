@@ -123,6 +123,7 @@ public class DFT {
     }
 
     public static void main(String[] args) {
+        /*
         List<Function> l = new LinkedList<>();
         l.add(new Constant(-6));
         l.add(new Nomial(11,1));
@@ -146,6 +147,11 @@ public class DFT {
         //System.out.println(toPlot(d,0,2*pi));
         d = dft.asbs(-4,5);
         System.out.println(toPlot(d,-4,5));
+
+         */
+        DFT dft = new DFT(51,new Exp());
+        double[][] d = dft.asbs(-2,2);
+        System.out.println(toPlot(d,-2,2));
     }
 
 }

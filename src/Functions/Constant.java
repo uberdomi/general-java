@@ -3,7 +3,6 @@ package Functions;
 public class Constant extends Function{
     private final double c;
     public Constant(double c){
-        super(c);
         this.c=c;
     }
 
@@ -23,6 +22,21 @@ public class Constant extends Function{
 
     @Override
     public String toString(){
-        return "" + c;
+        StringBuilder s = new StringBuilder();
+        if(infinitesimal(c)){
+            s.append((int) c);
+        }
+        else{
+            s.append(c);
+        }
+        return s.toString();
+    }
+    @Override
+    public boolean equals(Object o){
+        return false;
+    }
+
+    public boolean equals(Constant a){
+        return c==a.getC();
     }
 }
