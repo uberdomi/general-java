@@ -45,9 +45,9 @@ public class Cosinus extends Function{
     @Override
     public Function derivative() {
         if(g instanceof Identity){
-            return new ProductF(new Constant(-1), new Sinus());
+            return new ProductF(-1, new Sinus());
         }
-        return (new ProductF(new ProductF(new Constant(-1), new Sinus()),g.derivative()).simplify());
+        return (new ProductF(new ProductF(-1, new Sinus()),g.derivative()).simplify());
     }
 
     @Override

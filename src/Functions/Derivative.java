@@ -10,7 +10,6 @@ public class Derivative extends Function{
     @Override
     public double value(double input) {
         double x = (g.value(input+dx)-g.value(input-dx))/(2*dx);
-        //System.out.println(g + " f'(" + input + ")= " + x);
         return x;
     }
 

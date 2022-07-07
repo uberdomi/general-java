@@ -10,6 +10,14 @@ public class ProductF extends Function{
         this.f1 = f1;
         this.f2 = f2;
     }
+    public ProductF(double d,Function f) {
+        this.f1 = new Constant(d);
+        this.f2 = f;
+    }
+    public ProductF(Function f,double d) {
+        this.f1 = new Constant(d);
+        this.f2 = f;
+    }
 
     @Override
     public double value(double input) {
@@ -176,6 +184,9 @@ public class ProductF extends Function{
             g2=f2;
         }
         if(g1 instanceof Constant){
+            if(g2 instanceof Constant){
+                return new Constant(1);
+            }
             return g2;
         }
         if(g2 instanceof Constant){
@@ -184,14 +195,17 @@ public class ProductF extends Function{
         return new ProductF(g1,g2);
     }
     public Function simplify(){
-        double x=extractConst();
+        double x = extractConst();
         Function f = extractFunction();
+        if(x<eps&&-x<eps){
+            return new Constant(0);
+        }
         if(x-1<eps&&1-x<eps){
             return f;
         }
         if(f instanceof Constant c){
             return new Constant(x*c.getC());
         }
-        return new ProductF(new Constant(x),f);
+        return new ProductF(x,f);
     }
 }

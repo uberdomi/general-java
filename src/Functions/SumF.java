@@ -15,6 +15,37 @@ public class SumF extends Function{
     }
 
     public Function simplify(){
+        LinkedList<Constant> cs = new LinkedList<>();
+        LinkedList<Function> gs = new LinkedList<>();
+        Function g;
+        for(Function f : fs){
+            if(f instanceof Constant c){
+                cs.add(c);
+            }
+            else if(f instanceof  ProductF p){
+                g = p.simplify();
+                if(g instanceof Constant c){
+                    cs.add(c);
+                }
+                else{
+                    gs.add(g);
+                }
+            }
+            else{
+                gs.add(f);
+            }
+        }
+        double x = 0;
+        for(Constant c : cs){
+            x += c.getC();
+        }
+        if(x>eps||-x>eps){
+            gs.add(new Constant(x));
+        }
+        return gs.size() == 1 ? gs.pop() : new SumF(gs);
+    }
+    /*
+    public Function simplify(){
         LinkedList<Constant> consts = new LinkedList<>();
         LinkedList<Function> functions = new LinkedList<>();
         LinkedList<Function> functions2 = new LinkedList<>();
@@ -123,6 +154,8 @@ public class SumF extends Function{
             return new SumF(gs);
         }
     }
+
+     */
 
     public List<Function> getFs() {
         return fs;
