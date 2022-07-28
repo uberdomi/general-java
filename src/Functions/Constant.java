@@ -2,8 +2,18 @@ package Functions;
 
 public class Constant extends Function{
     private final double c;
+    private final Vector v;
     public Constant(double c){
         this.c=c;
+        v = new Vector(1);
+    }
+    public Constant(double c,Vector v){
+        this.c=c;
+        this.v = v;
+    }
+    public Constant(Vector v){
+        this.c=1;
+        this.v=v;
     }
 
     public double getC() {
@@ -16,7 +26,17 @@ public class Constant extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        return c;
+    }
+
+    @Override
     public Function derivative() {
+        return new Constant(0);
+    }
+
+    @Override
+    public Function pderivative(int dim) {
         return new Constant(0);
     }
 
@@ -29,6 +49,28 @@ public class Constant extends Function{
         else{
             s.append(c);
         }
+        if(v.isOne()){
+            return s.toString();
+        }
+        boolean first=true;
+        s.append("(");
+        for(double d : v.getInputs()){
+            if(!first){
+                s.append(",");
+            }
+            if(Function.infinitesimal(d)){
+                s.append((int) d);
+            }
+            else{
+                s.append(d);
+            }
+            first=false;
+        }
+        if(first){
+            return "0";
+        }
+
+        s.append(")");
         return s.toString();
     }
     @Override

@@ -4,10 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Function {
+    //TODO
+    //multi-dimensional - gradient, multi dim matrices, -> taylor polynom, total differentials
+    //partial derivatives ?
     public static final double eps = 1e-12;
     public static final double dx = 1e-2;
     public static final double pi = 3.141592653588003;
-    public static final int n = 10;
+    public static final int n = 17;
     //protected double prefactor=1;
 
     /*
@@ -32,7 +35,20 @@ public abstract class Function {
         return new Integral(this);
     }
     public abstract double value(double input);
+    public abstract double value(Vector v);
     public abstract Function derivative();
+    public abstract Function pderivative(int dim);
+    public Vector gradient(Vector v){
+        int h=v.getInputs().length;
+        if(h<=0){
+            return new Vector(0);
+        }
+        double[] d = new double[h];
+        for(int i=0; i<h; i++){
+            d[i] = pderivative(i+1).value(v);
+        }
+        return new Vector(d);
+    }
     public Function deriv(){
         return new Derivative(this);
     }
@@ -65,7 +81,7 @@ public abstract class Function {
             g = new Identity();
         }
         else{
-            g = new SumF(new Identity(),new Constant(-x));
+            g = new Translation(-x); //SumF(new Identity(),new Constant(-x))
         }
         List<Function> l = new LinkedList<>();
         Function d = f;
@@ -77,6 +93,54 @@ public abstract class Function {
             if(!(a<eps&&-a<eps)){
                 l.add(new ProductF(a,new Nomial(i,g)));
             }
+        }
+        return (new SumF(l).simplify());
+    }
+
+    public static Function taylorSeries(double x){
+        double a=1;
+        Function g;
+        if(x<eps&&-x<eps){
+            g = new Identity();
+        }
+        else{
+            g = new Translation(-x); //SumF(new Identity(),new Constant(-x))
+        }
+        List<Function> l = new LinkedList<>();
+        l.add(new Constant(1));
+        for(int i=1; i<n; i++){
+            a/=i;
+            /*
+            switch (i%4){
+                case 1 -> {
+                    if(!(a<eps&&-a<eps)){
+                        l.add(new ProductF(a,new Nomial(i,g)));
+                    }
+                }
+                case 3 -> {
+                    if(!(a<eps&&-a<eps)){
+                        l.add(new ProductF(-a,new Nomial(i,g)));
+                    }
+                }
+            }
+
+            switch (i%3){
+                case 0 -> {
+                    //if(!(a<eps&&-a<eps)){
+                        l.add(new ProductF(a,new Nomial(i,g)));
+                    //}
+                }
+                case 3 -> {
+                    //if(!(a<eps&&-a<eps)){
+                        l.add(new ProductF(-a,new Nomial(i,g)));
+                    //}
+                }
+            }
+            */
+             if(i%5==0){
+                 l.add(new ProductF(a,new Nomial(i,g)));
+             }
+
         }
         return (new SumF(l).simplify());
     }
@@ -134,6 +198,8 @@ public abstract class Function {
     }
 
     public static void main(String[] args) {
+        System.out.println(taylorSeries(0));
+        /*
         System.out.println(new Ln(new SumF(new Constant(1),new Identity())));
         System.out.println(taylorSeries(0,new Ln(new SumF(new Constant(1),new Identity()))));
         Function f = new ProductF(new Sinus(new Nomial(2)),new SumF(new Nomial(3), new ProductF(new Constant(-1),new Nomial(1))));
@@ -159,6 +225,8 @@ public abstract class Function {
         f= new Ln(new SumF(new Constant(1), new Identity()));
         System.out.println(f);
         System.out.println(f.integral());
+
+         */
         /*
         double x=0;
         //Function f = new Cosinus();

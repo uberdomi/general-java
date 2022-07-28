@@ -25,6 +25,11 @@ public class ProductF extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        return f1.value(v)*f2.value(v);
+    }
+
+    @Override
     public Function derivative() {
         if(f1 instanceof Constant && f2 instanceof Constant){
             return new Constant(0);
@@ -36,6 +41,10 @@ public class ProductF extends Function{
             return (new ProductF(f2,f1.derivative()).simplify());
         }
         return (new SumF(new ProductF(f1,f2.derivative()),new ProductF(f2,f1.derivative())).simplify());
+    }
+    @Override
+    public Function pderivative(int dim) {
+        return (new SumF(new ProductF(f1,f2.pderivative(dim)),new ProductF(f2,f1.pderivative(dim))).simplify());
     }
 
     @Override

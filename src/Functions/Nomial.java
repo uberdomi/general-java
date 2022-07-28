@@ -28,6 +28,11 @@ public class Nomial extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        return pow(g.value(v),pow);
+    }
+
+    @Override
     public Function derivative() {
         if(g instanceof Constant){
             return new Constant(0);
@@ -48,6 +53,11 @@ public class Nomial extends Function{
                 }
             }
         }
+    }
+
+    @Override
+    public Function pderivative(int dim) {
+        return (new ProductF((new ProductF(new Constant(pow),new Nomial(pow-1,g)).simplify()),g.pderivative(dim)).simplify());
     }
 
     @Override

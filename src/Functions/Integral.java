@@ -73,7 +73,17 @@ public class Integral extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        return taylor.value(v);
+    }
+
+    @Override
     public Function derivative() {
+        return f;
+    }
+
+    @Override
+    public Function pderivative(int dim) {
         return f;
     }
 

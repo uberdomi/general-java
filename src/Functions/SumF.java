@@ -173,6 +173,17 @@ public class SumF extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        double x=0;
+        for(Function f : fs){
+            if(f!=null){
+                x += f.value(v);
+            }
+        }
+        return x;
+    }
+
+    @Override
     public Function derivative() {
         LinkedList<Function> gs = new LinkedList<>();
         for(Function f : fs){
@@ -180,7 +191,18 @@ public class SumF extends Function{
                 gs.add(f.derivative());
             }
         }
-        return gs.size()==1 ? gs.pop() : new SumF(gs);
+        return (new SumF(gs).simplify());
+    }
+
+    @Override
+    public Function pderivative(int dim) {
+        LinkedList<Function> gs = new LinkedList<>();
+        for(Function f : fs){
+            if(f!=null&&!(f instanceof Constant)){
+                gs.add(f.pderivative(dim));
+            }
+        }
+        return (new SumF(gs).simplify());
     }
 
     @Override

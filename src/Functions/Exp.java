@@ -28,11 +28,31 @@ public class Exp extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        double x = g.value(v);
+        double output = 1;
+        double y = 1;
+        int i = 1;
+        while(y>eps||-y>eps){
+            y*=x;
+            y/=i;
+            output+=y;
+            i++;
+        }
+        return output;
+    }
+
+    @Override
     public Function derivative() {
         if(g instanceof Identity){
             return new Exp();
         }
         return (new ProductF(new Exp(g),g.derivative()).simplify());
+    }
+
+    @Override
+    public Function pderivative(int dim) {
+        return (new ProductF(new Exp(g),g.pderivative(dim)).simplify());
     }
 
     @Override

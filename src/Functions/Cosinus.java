@@ -43,11 +43,46 @@ public class Cosinus extends Function{
     }
 
     @Override
+    public double value(Vector v) {
+        double x = g.value(v);
+        double output = 1;
+        double y = 1;
+        if(x > pi){
+            int div = (int) (x/(2*pi));
+            x -= 2*pi*div;
+        }
+        else if(x < -pi){
+            int div = (int) (-x/(2*pi));
+            x += 2*pi*div;
+        }
+        int i=1;
+        while(y>eps||-y>eps){
+            y*=x;
+            y/=i;
+            switch (i%4){
+                case 0 ->{
+                    output+=y;
+                }
+                case 2 ->{
+                    output-=y;
+                }
+            }
+            i++;
+        }
+        return output;
+    }
+
+    @Override
     public Function derivative() {
         if(g instanceof Identity){
             return new ProductF(-1, new Sinus());
         }
-        return (new ProductF(new ProductF(-1, new Sinus()),g.derivative()).simplify());
+        return (new ProductF(new ProductF(-1, new Sinus(g)),g.derivative()).simplify());
+    }
+
+    @Override
+    public Function pderivative(int dim) {
+        return (new ProductF(new ProductF(-1, new Sinus(g)),g.pderivative(dim)).simplify());
     }
 
     @Override

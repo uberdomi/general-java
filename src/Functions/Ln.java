@@ -14,7 +14,11 @@ public class Ln extends Function{
 
     @Override
     public double value(double input) {
-        double x = g.value(input) > 1 ? g.value(input) : 1/g.value(input); //x>=1
+        double z = g.value(input);
+        if(z<eps&&-z<eps){
+            throw new IllegalArgumentException("negative log!");
+        }
+        double x = z > 1 ? z : 1/z; //x>=1
         if(x<=0){
             throw new IllegalArgumentException("negative log!");
         }
@@ -28,7 +32,30 @@ public class Ln extends Function{
             output-=y;
             y/=10;
         }
-        return g.value(input) > 1 ? output : -output;
+        return z > 1 ? output : -output;
+    }
+
+    @Override
+    public double value(Vector v) {
+        double z = g.value(v);
+        if(z<eps&&-z<eps){
+            throw new IllegalArgumentException("negative log!");
+        }
+        double x = z > 1 ? z : 1/z; //x>=1
+        if(x<=0){
+            throw new IllegalArgumentException("negative log!");
+        }
+        double output = 0; //exp(output) == 1 <= g(input)
+        double y = 10;
+        Exp e = new Exp();
+        while(e.value(output)-x>eps||x-e.value(output)>eps){
+            while(e.value(output)<x){
+                output+=y;
+            }
+            output-=y;
+            y/=10;
+        }
+        return z > 1 ? output : -output;
     }
 
     @Override
@@ -37,6 +64,11 @@ public class Ln extends Function{
             return new Nomial(-1);
         }
         return (new ProductF(new Nomial(-1,g),g.derivative()).simplify());
+    }
+
+    @Override
+    public Function pderivative(int dim) {
+        return (new ProductF(new Nomial(-1,g),g.pderivative(dim)).simplify());
     }
 
     @Override
